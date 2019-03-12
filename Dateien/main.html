@@ -8,28 +8,60 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-deep_orange.min.css">
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <script src="https://www.gstatic.com/firebasejs/5.8.6/firebase.js"></script>
-    <script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyA-mbg9CvX0bvQX8KCGEnz6wq-O82f1C9k",
-            authDomain: "smart-home-a5e0f.firebaseapp.com",
-            databaseURL: "https://smart-home-a5e0f.firebaseio.com",
-            projectId: "smart-home-a5e0f",
-            storageBucket: "smart-home-a5e0f.appspot.com",
-            messagingSenderId: "413738318134"
-        };
-        firebase.initializeApp(config);
-    </script>
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.6/firebase-app.js"></script>
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.6/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.6/firebase-auth.js"></script>
     <title>Haussteuerung</title>
 </head>
 
 <body>
-
+    <button onclick="logout()">Logout</button>
 </body>
 
 </html>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyA-mbg9CvX0bvQX8KCGEnz6wq-O82f1C9k",
+        authDomain: "smart-home-a5e0f.firebaseapp.com",
+        databaseURL: "https://smart-home-a5e0f.firebaseio.com",
+        projectId: "smart-home-a5e0f",
+        storageBucket: "smart-home-a5e0f.appspot.com",
+        messagingSenderId: "413738318134"
+    };
+    firebase.initializeApp(config);
+
+    //Variables
+    var database = firebase.database();
+
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            // User is signed in.
+            var displayName = user.displayName;
+            var email = user.email;
+            var emailVerified = user.emailVerified;
+            var photoURL = user.photoURL;
+            var isAnonymous = user.isAnonymous;
+            var uid = user.uid;
+            var providerData = user.providerData;
+            console.log("success");
+        } else {
+            window.location.href = "../index.html"
+            console.log("failed");
+        }
+    });
+
+    function logout() {
+        firebase.auth().signOut().then(function() {
+            console.log("logged out");
+        }, function(error) {
+            console.log("error");
+        });
+    }
+
+    var lampStatus = firebase.database().ref('lamp-tv-right/status');
+    lampStatus.on('value', function(snapshot) {
+        console.log(toString(snapshot));
+    });
+</script>
