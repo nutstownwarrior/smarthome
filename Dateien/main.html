@@ -62,6 +62,6 @@
 
     var lampStatus = firebase.database().ref('lamp-tv-right/status');
     lampStatus.on('value', function(snapshot) {
-        console.log(toString(snapshot));
+        console.log(snapshot.val());
     });
 </script>
