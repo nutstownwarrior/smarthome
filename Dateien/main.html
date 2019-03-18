@@ -56,15 +56,12 @@
                         <p>
                             Hier kannst du Geräte oder Aktionen zu deinem Starbildschirm hinzufügen. Wähle dazu einfach ein Gerät aus der Liste, oder erstelle eine Aktion.
                         </p>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="room_dropdown">
                             <input type="text" value="" class="mdl-textfield__input" id="sample4" readonly>
                             <input type="hidden" value="" name="sample4">
                             <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
                             <label for="sample4" class="mdl-textfield__label">Raum</label>
-                            <ul for="sample4" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-                                <li class="mdl-menu__item" data-val="DEU">Germany</li>
-                                <li class="mdl-menu__item" data-val="BLR">Belarus</li>
-                                <li class="mdl-menu__item" data-val="RUS">Russia</li>
+                            <ul for="sample4" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="room_dropdown_ul">
                             </ul>
                         </div>
                     </div>
@@ -113,8 +110,7 @@
     });
 
     function logout() {
-        firebase.auth().signOut().then(function() {
-        }, function(error) {
+        firebase.auth().signOut().then(function() {}, function(error) {
             console.log("error");
         });
     }
@@ -125,18 +121,38 @@
     });
 
     (function() {
-    'use strict';
-    var dialogButton = document.querySelector('.dialog-button');
-    var dialog = document.querySelector('#dialog');
-    if (! dialog.showModal) {
-      dialogPolyfill.registerDialog(dialog);
-    }
-    dialogButton.addEventListener('click', function() {
-       dialog.showModal();
-    });
-    dialog.querySelector('button:not([disabled])')
-    .addEventListener('click', function() {
-      dialog.close();
-    });
-  }());
+        'use strict';
+        var dialogButton = document.querySelector('.dialog-button');
+        var dialog = document.querySelector('#dialog');
+        if (!dialog.showModal) {
+            dialogPolyfill.registerDialog(dialog);
+        }
+        dialogButton.addEventListener('click', function() {
+            dialog.showModal();
+        });
+        dialog.querySelector('button:not([disabled])')
+            .addEventListener('click', function() {
+                dialog.close();
+            });
+    }());
+
+    var query = firebase.database().ref("/").orderByKey();
+    var roomDropdown = document.getElementById("room_dropdown_ul");
+    query.once("value")
+        .then(function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                // key will be "ada" the first time and "alan" the second time
+                var key = childSnapshot.key;
+                var li = document.createElement("li");
+                var ul = document.getElementById("room_dropdown_ul");
+                li.appendChild(document.createTextNode(key));
+                li.classList.add("mdl-menu__item");
+                li.setAttribute("data-val","key");
+                ul.appendChild(li);
+                getmdlSelect.init(".getmdl-select");
+                componentHandler.upgradeDom();
+                // childData will be the actual contents of the child
+                var childData = childSnapshot.val();
+            });
+        });
 </script>
