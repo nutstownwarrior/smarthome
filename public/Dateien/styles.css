@@ -46,6 +46,12 @@
     width: 35vw;
 }
 
+@media only screen and (max-width: 600px) {
+    .mdl-dialog {
+        width: 85vw;
+    }
+}
+
 .mdl-dialog__title {
     padding: 24px 24px 0;
     margin: 0;
@@ -91,4 +97,9 @@
 .mdl-dialog__content {
     padding: 20px 24px 24px 24px;
     color: rgba(0, 0, 0, 0.54);
+}
+
+.mdl-layout__header .mdl-layout__drawer-button {
+    background-color: #F5F5F5;
+    color: rgb(66, 66, 66);
 }
