@@ -15,7 +15,7 @@
     <script src="https://www.gstatic.com/firebasejs/5.8.6/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.6/firebase-auth.js"></script>
     <script src="dialog-polyfill-master/dist/dialog-polyfill.js"></script>
-    <script defer src="getmdl-select-master/getmdl-select.min.js"></script>
+    <script src="getmdl-select-master/getmdl-select.min.js"></script>
     <title>Haussteuerung</title>
 </head>
 
@@ -57,16 +57,24 @@
                             Hier kannst du Geräte oder Aktionen zu deinem Starbildschirm hinzufügen. Wähle dazu einfach ein Gerät aus der Liste, oder erstelle eine Aktion.
                         </p>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="room_dropdown">
-                            <input type="text" value="" class="mdl-textfield__input" id="sample4" readonly>
+                            <input type="text" value="" class="mdl-textfield__input" id="room_input" onchange="fillDevices()"readonly>
                             <input type="hidden" value="" name="sample4">
                             <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-                            <label for="sample4" class="mdl-textfield__label">Raum</label>
-                            <ul for="sample4" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="room_dropdown_ul">
+                            <label for="room_input" class="mdl-textfield__label">Raum</label>
+                            <ul for="room_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="room_dropdown_ul">
+                            </ul>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="device_dropdown">
+                            <input type="text" value="" class="mdl-textfield__input" id="device_input" readonly>
+                            <input type="hidden" value="" name="sample5">
+                            <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                            <label for="device_input" class="mdl-textfield__label">Gerät</label>
+                            <ul for="device_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="device_dropdown_ul">
                             </ul>
                         </div>
                     </div>
                     <div class="mdl-dialog__actions">
-                        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Abbrechen</button>
+                        <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="exit_button">Abbrechen</button>
                         <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Fertig</button>
                     </div>
                 </dialog>
@@ -91,6 +99,8 @@
 
     //Variables
     var database = firebase.database();
+    var roomSelect = document.getElementById("room_dropdown");
+    var deviceSelect = document.getElementById("device_dropdown");
 
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
@@ -129,30 +139,67 @@
         }
         dialogButton.addEventListener('click', function() {
             dialog.showModal();
+            fillRooms();
         });
-        dialog.querySelector('button:not([disabled])')
-            .addEventListener('click', function() {
+        dialog.querySelector('#exit_button').addEventListener('click', function() {
                 dialog.close();
+                var ul = document.getElementById("device_dropdown_ul");
+                while (ul.firstChild) {
+                    ul.removeChild(ul.firstChild);
+                }
+                console.log("blub");
+                roomSelect.classList.remove("is-dirty");
+                deviceSelect.classList.remove("is-dirty");
             });
     }());
-
-    var query = firebase.database().ref("/").orderByKey();
-    var roomDropdown = document.getElementById("room_dropdown_ul");
-    query.once("value")
-        .then(function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {
-                // key will be "ada" the first time and "alan" the second time
-                var key = childSnapshot.key;
-                var li = document.createElement("li");
-                var ul = document.getElementById("room_dropdown_ul");
-                li.appendChild(document.createTextNode(key));
-                li.classList.add("mdl-menu__item");
-                li.setAttribute("data-val","key");
-                ul.appendChild(li);
-                getmdlSelect.init(".getmdl-select");
-                componentHandler.upgradeDom();
-                // childData will be the actual contents of the child
-                var childData = childSnapshot.val();
+    function fillRooms(){
+        var ul = document.getElementById("room_dropdown_ul");
+        while (ul.firstChild) {
+            ul.removeChild(ul.firstChild);
+        }
+        var query = firebase.database().ref("/").orderByKey();
+        var roomDropdown = document.getElementById("room_dropdown_ul");
+        query.once("value")
+            .then(function(snapshot) {
+                snapshot.forEach(function(childSnapshot) {
+                    // key will be "ada" the first time and "alan" the second time
+                    var key = childSnapshot.key;
+                    var li = document.createElement("li");
+                    li.appendChild(document.createTextNode(key));
+                    li.classList.add("mdl-menu__item");
+                    li.setAttribute("data-val","key");
+                    ul.appendChild(li);
+                    getmdlSelect.init("#room_dropdown");
+                    componentHandler.upgradeDom();
+                });
             });
-        });
+    }
+
+    function fillDevices(){
+        var ul = document.getElementById("device_dropdown_ul");
+        while (ul.firstChild) {
+            ul.removeChild(ul.firstChild);
+        }
+        document.getElementById("device_input").value = "";
+        deviceSelect.classList.remove("is-dirty");
+        getmdlSelect.init("#device_dropdown");
+        var room = document.getElementById("room_input").value;
+        var query = firebase.database().ref("/" + room).orderByKey();
+        var roomDropdown = document.getElementById("room_dropdown_ul");
+        query.once("value")
+            .then(function(snapshot) {
+                snapshot.forEach(function(childSnapshot) {
+                    var key = childSnapshot.key;
+                    var li = document.createElement("li");
+                    var ul = document.getElementById("device_dropdown_ul");
+                    li.appendChild(document.createTextNode(key));
+                    li.classList.add("mdl-menu__item");
+                    li.setAttribute("data-val","key");
+                    ul.appendChild(li);
+                    getmdlSelect.init("#device_dropdown");
+                    componentHandler.upgradeDom();
+                });
+            });
+
+    }
 </script>

@@ -46,7 +46,7 @@
     width: 35vw;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 1024px) {
     .mdl-dialog {
         width: 85vw;
     }
