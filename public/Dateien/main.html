@@ -35,6 +35,9 @@
                         <input class="mdl-textfield__input" type="text" name="sample" id="fixed-header-drawer-exp">
                     </div>
                 </div>
+                <button class="mdl-button mdl-js-button mdl-button--icon" onclick="openFullscreen()">
+                    <i class="material-icons" id="fullscreen_icon">fullscreen</i>
+                </button>
                 <button class="mdl-button mdl-js-button mdl-button--icon" onclick="logout()">
                     <i class="material-icons">exit_to_app</i>
                 </button>
@@ -101,7 +104,8 @@
     var database = firebase.database();
     var roomSelect = document.getElementById("room_dropdown");
     var deviceSelect = document.getElementById("device_dropdown");
-
+    var elem = document.documentElement;
+    var fullscreenIcon = document.getElementById("fullscreen_icon");
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
             // User is signed in.
@@ -201,5 +205,36 @@
                 });
             });
 
+    }
+
+    function openFullscreen() {
+        if (window.innerHeight == screen.height) {
+            if (document.exitFullscreen) {
+            document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { /* Firefox */
+            document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+            document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { /* IE/Edge */
+            document.msExitFullscreen();
+            }
+            fullscreenIcon.innerHTML = "fullscreen";
+        }
+        else{
+            if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+            /* Firefox */
+            elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+            /* Chrome, Safari and Opera */
+            elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+            /* IE/Edge */
+            elem.msRequestFullscreen();
+            }
+            fullscreenIcon.innerHTML = "fullscreen_exit";
+        }
+        componentHandler.upgradeDom();
     }
 </script>
