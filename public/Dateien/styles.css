@@ -103,3 +103,11 @@
     background-color: #F5F5F5;
     color: rgb(66, 66, 66);
 }
+
+.wrapper {
+    display: inline-block;
+}
+
+.mdl-card__supporting-text{
+    text-align: center;
+}

@@ -247,19 +247,28 @@
                 snapshot.forEach(function(childSnapshot) {
                     var key = childSnapshot.key;
                     var data = childSnapshot.val();
+                    var locationArray = data.path.split("/");
                     var div = document.createElement("div");
+                    var supTextDiv = document.createElement("div");
+                    var wrapperDiv = document.createElement("div");
                     var menu = document.createElement("div");
                     var button = document.createElement("button");
                     var icon = document.createElement("i");
                     var label = document.createElement("label");
                     var input = document.createElement("input");
+                    var title = document.createElement("h4");
                     icon.classList.add("material-icons");
                     icon.innerHTML = "close";
                     button.appendChild(icon);
                     button.classList.add("mdl-button","mdl-button--icon","mdl-js-button","mdl-js-ripple-effect");
                     menu.appendChild(button);
                     menu.classList.add("mdl-card__menu");
+                    title.classList.add("mdl-card__title");
+                    title.innerHTML = locationArray[1] + "<br>Ort: " + locationArray[0];
+                    wrapperDiv.classList.add("wrapper");
+                    supTextDiv.classList.add("mdl-card__supporting-text");
                     div.appendChild(menu);
+                    div.appendChild(title);
                     div.classList.add("mdl-cell","mdl-cell--4-col","mdl-card","mdl-shadow--4dp");
                     //add action
                     switch(data.type){
@@ -276,7 +285,9 @@
                             componentHandler.upgradeDom();
                             break;
                     }
-                    div.appendChild(label);
+                    wrapperDiv.appendChild(label);
+                    supTextDiv.appendChild(wrapperDiv);
+                    div.appendChild(supTextDiv);
                     grid.appendChild(div);
                     componentHandler.upgradeDom();
                 });
