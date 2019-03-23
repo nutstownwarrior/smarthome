@@ -265,32 +265,51 @@
                     menu.classList.add("mdl-card__menu");
                     title.classList.add("mdl-card__title");
                     title.innerHTML = locationArray[1] + "<br>Ort: " + locationArray[0];
-                    wrapperDiv.classList.add("wrapper");
-                    supTextDiv.classList.add("mdl-card__supporting-text");
                     div.appendChild(menu);
                     div.appendChild(title);
                     div.classList.add("mdl-cell","mdl-cell--4-col","mdl-card","mdl-shadow--4dp");
                     //add action
                     switch(data.type){
                         case "toggle":
-                            console.log("blub");
+                            wrapperDiv.classList.add("wrapper");
+                            supTextDiv.classList.add("mdl-card__supporting-text");
                             input.classList.add("mdl-switch__input");
                             input.setAttribute("type", "checkbox");
                             input.setAttribute("id", data.path);
-                            if(database.ref(data.path + "/status").once('value') == 1){
-                                input.checked = true;
-                            }
                             label.classList.add("mdl-switch","mdl-js-switch","mdl-js-ripple-effect");
                             label.appendChild(input);
+                            wrapperDiv.appendChild(label);
+                            supTextDiv.appendChild(wrapperDiv);
+                            div.appendChild(supTextDiv);
+                            firebase.database().ref(data.path + "/status").on('value', function(status) {
+                                if(status.val() == 1){
+                                    label.MaterialSwitch.on();
+                                }
+                                else{
+                                    label.MaterialSwitch.off();
+                                }
+                            })
                             componentHandler.upgradeDom();
                             break;
                     }
-                    wrapperDiv.appendChild(label);
-                    supTextDiv.appendChild(wrapperDiv);
-                    div.appendChild(supTextDiv);
                     grid.appendChild(div);
                     componentHandler.upgradeDom();
                 });
             });
     }
+
+    document.querySelector('#grid').addEventListener('click', function (event) {
+        var changes = {};
+        if (event.target.classList.contains('mdl-switch__input')) {
+            firebase.database().ref(event.target.id + "/status").once('value').then(function(status) {
+                                if(status.val() == 1){
+                                    changes[event.target.id + "/status"] = 0;
+                                }
+                                else{
+                                    changes[event.target.id + "/status"] = 1;
+                                }
+                                firebase.database().ref().update(changes);
+                            });
+        }
+    })
 </script>
