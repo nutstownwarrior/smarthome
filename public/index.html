@@ -36,7 +36,7 @@
                     </form>
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
-                    <button onclick="signIn()" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Einloggen</button>
+                    <button onclick="signIn()" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" id="login_button">Einloggen<div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner" id="spinner"></div></button>
                 </div>
             </div>
         </main>
@@ -45,6 +45,10 @@
 
 </html>
 <script>
+
+    var spinner = document.createElement("div");
+    spinner.classList.add("mdl-spinner", "mdl-spinner--single-color", "mdl-js-spinner", "is-active");
+    var loginButton = document.getElementById("login_button");
     // Initialize Firebase
     var config = {
         apiKey: "AIzaSyA-mbg9CvX0bvQX8KCGEnz6wq-O82f1C9k",
@@ -60,13 +64,17 @@
         document.getElementById("error").innerHTML = "";
         var email = document.getElementById("email").value;
         var password = document.getElementById("userpass").value;
+        loginButton.innerHTML = "";
+        loginButton.appendChild(spinner);
+        componentHandler.upgradeDom();
         firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
             // Handle Errors here.
             var errorCode = error.code;
             var errorMessage = error.message;
             console.log(errorMessage);
             document.getElementById("error").innerHTML = errorMessage;
-            // ...
+            loginButton.innerHTML = "Einloggen";
+            componentHandler.upgradeDom();
         });
     }
 
@@ -80,7 +88,8 @@
             var isAnonymous = user.isAnonymous;
             var uid = user.uid;
             var providerData = user.providerData;
-            console.log("success");
+            loginButton.innerHTML = "Einloggen";
+            componentHandler.upgradeDom();
             window.location.href = "Dateien/main.html"
         } else {
             console.log("failed");
