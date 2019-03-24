@@ -135,6 +135,7 @@
             }
             dialogButton.addEventListener('click', function() {
                 dialog.showModal();
+                error.innerHTML = "";
                 fillRooms();
             });
             dialog.querySelector('#exit_button').addEventListener('click', function() {
