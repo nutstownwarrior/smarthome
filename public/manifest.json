@@ -1,0 +1,20 @@
+{
+  "short_name": "Zuhause",
+  "name": "Haussteuerung",
+  "icons": [
+    {
+      "src": "/Dateien/icons/home-button128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "/Dateien/icons/home-button512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "index.html",
+  "background_color": "#f44242",
+  "display": "standalone",
+  "theme_color": "#37474F"
+}
