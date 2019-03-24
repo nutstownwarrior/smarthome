@@ -136,6 +136,8 @@
             dialogButton.addEventListener('click', function() {
                 dialog.showModal();
                 error.innerHTML = "";
+                roomSelect.classList.remove("is-dirty");
+                deviceSelect.classList.remove("is-dirty");
                 fillRooms();
             });
             dialog.querySelector('#exit_button').addEventListener('click', function() {
@@ -144,8 +146,6 @@
                 while (ul.firstChild) {
                     ul.removeChild(ul.firstChild);
                 }
-                roomSelect.classList.remove("is-dirty");
-                deviceSelect.classList.remove("is-dirty");
             });
         }());
 
