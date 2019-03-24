@@ -47,6 +47,16 @@
 </html>
 <script>
 
+    if ('serviceWorker' in navigator) {
+        console.log("Will the service worker register?");
+        navigator.serviceWorker.register('service-worker.js')
+        .then(function(reg){
+            console.log("Yes, it did.");
+        }).catch(function(err) {
+            console.log("No it didn't. This happened: ", err)
+        });
+    }
+
     var spinner = document.createElement("div");
     spinner.classList.add("mdl-spinner", "mdl-spinner--single-color", "mdl-js-spinner", "is-active");
     var loginButton = document.getElementById("login_button");
