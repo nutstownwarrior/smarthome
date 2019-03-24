@@ -323,7 +323,7 @@
                         var childData = childSnapshot.val();
                         if(childData.path == url){
                             error.innerHTML = "Dieses Gerät ist bereits in deiner Liste";
-                            return;
+                            status = false;
                         }
                     });
                     if(status){
