@@ -118,7 +118,9 @@
             var uid = user.uid;
             var providerData = user.providerData;
             console.log("success");
-            constructCards();
+            database.ref("/Users/" + firebase.auth().currentUser.uid + "/devices").on('value', function(snapshot) {
+                constructCards();
+            });
         } else {
             window.location.href = "../index.html"
             console.log("failed");
@@ -239,6 +241,7 @@
     }
 
     function constructCards(){
+        console.log("blub");
         var grid = document.getElementById("grid");
         while (grid.firstChild) {
             grid.removeChild(grid.firstChild);
