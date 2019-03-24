@@ -295,8 +295,6 @@
                                     firebase.database().ref(data.path + "/status").on('value', function(status) {
                                         if (status.val() == 1) {
                                             label.MaterialSwitch.on();
-                                        } else {
-                                            label.MaterialSwitch.off();
                                         }
                                     })
                                     componentHandler.upgradeDom();
@@ -340,7 +338,7 @@
 
         document.querySelector('#grid').addEventListener('click', function(event) {
             var changes = {};
-            /*if (event.target.classList.contains('mdl-switch__input')) {
+            if (event.target.classList.contains('mdl-switch__input')) {
                 firebase.database().ref(event.target.id + "/status").once('value').then(function(status) {
                     if (status.val() == 1) {
                         changes[event.target.id + "/status"] = 0;
@@ -349,11 +347,10 @@
                     }
                     firebase.database().ref().update(changes);
                 });
-            }*/
-            if(event.target.parentElement.classList.contains('mdl-button--icon')){
+            }
+            else if(event.target.parentElement.classList.contains('mdl-button--icon')){
                 var device = event.target.parentElement.id.replace("/", "")
                 database.ref("/Users/" + firebase.auth().currentUser.uid + "/devices/" + device.replace("1","") + "/").remove();
-                console.log("/Users/" + firebase.auth().currentUser.uid + "/devices/" + device.replace("1",""));
             }
         })
 
