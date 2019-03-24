@@ -6,11 +6,6 @@
       "src": "/Dateien/icons/home-button128.png",
       "type": "image/png",
       "sizes": "128x128"
-    },
-    {
-      "src": "/Dateien/icons/home-button512.png",
-      "type": "image/png",
-      "sizes": "512x512"
     }
   ],
   "start_url": "index.html",
