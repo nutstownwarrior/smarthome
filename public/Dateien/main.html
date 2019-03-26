@@ -288,6 +288,9 @@
                                         if (status.val() == 1) {
                                             label.MaterialSwitch.on();
                                         }
+                                        else if (status.val() == 0) {
+                                            label.MaterialSwitch.off();
+                                        }
                                     })
                                     componentHandler.upgradeDom();
                                     break;
