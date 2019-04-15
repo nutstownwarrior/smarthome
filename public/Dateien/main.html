@@ -48,7 +48,7 @@
             </header>
             <div class="mdl-layout__drawer mdl-color--blue-grey-800">
                 <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link" href="">Link</a>
+                    <a class="mdl-navigation__link" href="Seiten/remote.html">Fernbedienungen</a>
                     <a class="mdl-navigation__link" href="">Link</a>
                     <a class="mdl-navigation__link" href="">Link</a>
                     <a class="mdl-navigation__link" href="">Link</a>
@@ -202,14 +202,17 @@
                 .then(function(snapshot) {
                     snapshot.forEach(function(childSnapshot) {
                         var key = childSnapshot.key;
-                        var li = document.createElement("li");
-                        var ul = document.getElementById("device_dropdown_ul");
-                        li.appendChild(document.createTextNode(key));
-                        li.classList.add("mdl-menu__item");
-                        li.setAttribute("data-val", "key");
-                        ul.appendChild(li);
-                        getmdlSelect.init("#device_dropdown");
-                        componentHandler.upgradeDom();
+                        var data = childSnapshot.val();
+                        if(data.type != "ir"){
+                            var li = document.createElement("li");
+                            var ul = document.getElementById("device_dropdown_ul");
+                            li.appendChild(document.createTextNode(key));
+                            li.classList.add("mdl-menu__item");
+                            li.setAttribute("data-val", "key");
+                            ul.appendChild(li);
+                            getmdlSelect.init("#device_dropdown");
+                            componentHandler.upgradeDom();
+                        }
                     });
                 });
 
