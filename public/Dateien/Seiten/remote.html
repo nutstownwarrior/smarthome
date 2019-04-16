@@ -50,53 +50,53 @@
                 <div class="mdl-grid">
                     <div class="mdl-cell mdl-cell--8-col mdl-card mdl-shadow--2dp">
                         <h4 class="display-1">TV-Fernbedienung</h4>
-                        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" onclick="togglePower()">
+                        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(1)">
                             <i class="material-icons">power_settings_new</i>
                         </button>
                         <div class="mdl-grid">
                             <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
-                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(2)">
                                     <i class="material-icons">skip_previous</i>
                                 </button>
-                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(3)">
                                     <i class="material-icons">skip_next</i>
                                 </button>
                             </div>
                             <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
-                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(4)">
                                     <i class="material-icons">volume_up</i>
                                 </button>
-                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(5)">
                                     <i class="material-icons">volume_down</i>
                                 </button>
                             </div>
                             <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(6)">
                                     <i class="material-icons">keyboard_arrow_up</i>
                                 </button>
                             </div>
                             <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(7)">
                                     <i class="material-icons">keyboard_arrow_left</i>
                                 </button>
-                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" id="confirm">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" id="confirm" onclick="setTV(8)">
                                     <i class="material-icons">input</i>
                                 </button>
-                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(9)">
                                     <i class="material-icons">keyboard_arrow_right</i>
                                 </button>
                             </div>
                             <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(10)">
                                     <i class="material-icons">keyboard_arrow_down</i>
                                 </button>
                             </div>
                             <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
-                                    <i class="material-icons">apps</i>
-                                </button>
-                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(12)">
                                     <i class="material-icons">arrow_back</i>
+                                </button>
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(11)">
+                                    <i class="material-icons">apps</i>
                                 </button>
                             </div>
                         </div>
@@ -105,6 +105,27 @@
             </div>
         </main>
     </div>
+    <dialog id="dialog" class="mdl-dialog">
+        <h3 class="mdl-dialog__title">Raum auswählen</h3>
+        <div class="mdl-dialog__content">
+            <p>
+                Wähle den Raum aus, dessen TV du steuern möchtest.
+            </p>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="room_dropdown">
+                <input type="text" value="" class="mdl-textfield__input" id="room_input" readonly>
+                <input type="hidden" value="" name="sample4">
+                <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                <label for="room_input" class="mdl-textfield__label">Raum</label>
+                <ul for="room_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="room_dropdown_ul">
+                </ul>
+            </div>
+            <h6 id="error"></h6>
+        </div>
+        <div class="mdl-dialog__actions">
+            <button type="button" onclick="selectRoom()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Fertig</button>
+            <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="exit_button" onclick="abort()">Abbrechen</button>
+        </div>
+    </dialog>
 </body></html>
     <script>
         // Initialize Firebase
@@ -120,6 +141,10 @@
 
         //Variables
         var database = firebase.database();
+        var dialog = document.querySelector('#dialog');
+        var room = "Fabians Zimmer";
+        var error = document.getElementById("error");
+
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 // User is signed in.
@@ -139,8 +164,58 @@
             });
         }
 
-        function togglePower(){
-            firebase.database().ref().update();
+        function setTV(i){
+            var updates = {};
+            updates[room + "/Fernseher/code"] = i;
+            database.ref().update(updates);
         }
 
+        (function() {
+            'use strict';
+            if (!dialog.showModal) {
+                dialogPolyfill.registerDialog(dialog);
+            }
+            dialog.showModal();
+            error.innerHTML = "";
+            fillRooms();
+        }());
+
+        function abort(){
+            window.open("../main.html","_self");
+        }
+
+        function selectRoom(){
+            room = document.getElementById("room_input").value;
+            if(room != ""){
+                console.log(room);
+                dialog.close();
+            }
+            else{
+                error.innerHTML = "Bitte wähle einen Raum aus.";
+            }
+        }
+
+        function fillRooms(){
+            var ul = document.getElementById("room_dropdown_ul");
+            var query = firebase.database().ref("/").orderByKey();
+            var roomDropdown = document.getElementById("room_dropdown_ul");
+            query.once("value")
+                .then(function(snapshot) {
+                    snapshot.forEach(function(childSnapshot) {
+                        var key = childSnapshot.key;
+                        var data = childSnapshot.val();
+                        if (key != "Users") {
+                                if (Object.keys(data).includes('Fernseher')) {
+                                    var li = document.createElement("li");
+                                    li.appendChild(document.createTextNode(key));
+                                    li.classList.add("mdl-menu__item");
+                                    li.setAttribute("data-val", "key");
+                                    ul.appendChild(li);
+                                    getmdlSelect.init("#room_dropdown");
+                                    componentHandler.upgradeDom();
+                                }
+                            });
+                    });
+                });
+        }
     </script>
