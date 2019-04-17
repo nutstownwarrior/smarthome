@@ -185,8 +185,9 @@
         }
 
         function selectRoom(){
-            room = document.getElementById("room_input").value;
-            if(room != ""){
+            var selectData = document.getElementById("room_input").value;
+            if(selectData != ""){
+                room = selectData;
                 console.log(room);
                 dialog.close();
             }
@@ -214,7 +215,7 @@
                                     getmdlSelect.init("#room_dropdown");
                                     componentHandler.upgradeDom();
                                 }
-                            });
+                        }
                     });
                 });
         }
