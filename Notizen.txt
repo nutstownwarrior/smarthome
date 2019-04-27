@@ -11,4 +11,4 @@ Bestätigen: 8
 Rechts: 9
 Runter: 10
 Smart-Menü: 11
-Zurück: 12
+back: 12
