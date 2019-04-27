@@ -1,0 +1,14 @@
+TV-Codes:
+Normal: 0
+Ein/Aus: 1
+Zurück: 2
+Vorwärts: 3
+Lauter: 4
+Leiser: 5
+Oben: 6
+Links: 7
+Bestätigen: 8
+Rechts: 9
+Runter: 10
+Smart-Menü: 11
+Zurück: 12

@@ -1,0 +1,222 @@
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width = device-width, initial-scale = 1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#37474F" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-deep_orange.min.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="../dialog-polyfill-master/dist/dialog-polyfill.css">
+    <link rel="stylesheet" href="../getmdl-select-master/getmdl-select.min.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+    <link rel="manifest" href="../../manifest.json">
+    <script src="https://www.gstatic.com/firebasejs/5.8.6/firebase-app.js"></script>
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.6/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.6/firebase-auth.js"></script>
+    <script src="../dialog-polyfill-master/dist/dialog-polyfill.js"></script>
+    <script src="../getmdl-select-master/getmdl-select.min.js"></script>
+    <title>Haussteuerung</title>
+</head>
+
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row mdl-color--grey-100 mdl-color-text--grey-600">
+                <!-- Title -->
+                <span class="mdl-layout-title">Fernbedienung</span>
+                <!-- Add spacer, to align navigation to the right -->
+                <div class="mdl-layout-spacer"></div>
+                <button class="mdl-button mdl-js-button mdl-button--icon" onclick="logout()">
+                    <i class="material-icons">exit_to_app</i>
+                </button>
+                <!-- Navigation. We hide it in small screens. -->
+            </div>
+        </header>
+        <div class="mdl-layout__drawer mdl-color--blue-grey-800">
+            <span class="mdl-layout-title">Title</span>
+            <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="../main.html">Hauptseite</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+            </nav>
+        </div>
+        <main class="mdl-layout__content">
+            <div class="page-content">
+                <div class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--8-col mdl-card mdl-shadow--2dp">
+                        <h4 class="display-1">TV-Fernbedienung</h4>
+                        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(1)">
+                            <i class="material-icons">power_settings_new</i>
+                        </button>
+                        <div class="mdl-grid">
+                            <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(2)">
+                                    <i class="material-icons">skip_previous</i>
+                                </button>
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(3)">
+                                    <i class="material-icons">skip_next</i>
+                                </button>
+                            </div>
+                            <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(4)">
+                                    <i class="material-icons">volume_up</i>
+                                </button>
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(5)">
+                                    <i class="material-icons">volume_down</i>
+                                </button>
+                            </div>
+                            <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(6)">
+                                    <i class="material-icons">keyboard_arrow_up</i>
+                                </button>
+                            </div>
+                            <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(7)">
+                                    <i class="material-icons">keyboard_arrow_left</i>
+                                </button>
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" id="confirm" onclick="setTV(8)">
+                                    <i class="material-icons">input</i>
+                                </button>
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(9)">
+                                    <i class="material-icons">keyboard_arrow_right</i>
+                                </button>
+                            </div>
+                            <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(10)">
+                                    <i class="material-icons">keyboard_arrow_down</i>
+                                </button>
+                            </div>
+                            <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(12)">
+                                    <i class="material-icons">arrow_back</i>
+                                </button>
+                                <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored" onclick="setTV(11)">
+                                    <i class="material-icons">apps</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <dialog id="dialog" class="mdl-dialog">
+        <h3 class="mdl-dialog__title">Raum auswählen</h3>
+        <div class="mdl-dialog__content">
+            <p>
+                Wähle den Raum aus, dessen TV du steuern möchtest.
+            </p>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="room_dropdown">
+                <input type="text" value="" class="mdl-textfield__input" id="room_input" readonly>
+                <input type="hidden" value="" name="sample4">
+                <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                <label for="room_input" class="mdl-textfield__label">Raum</label>
+                <ul for="room_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="room_dropdown_ul">
+                </ul>
+            </div>
+            <h6 id="error"></h6>
+        </div>
+        <div class="mdl-dialog__actions">
+            <button type="button" onclick="selectRoom()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Fertig</button>
+            <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="exit_button" onclick="abort()">Abbrechen</button>
+        </div>
+    </dialog>
+</body></html>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyA-mbg9CvX0bvQX8KCGEnz6wq-O82f1C9k",
+            authDomain: "smart-home-a5e0f.firebaseapp.com",
+            databaseURL: "https://smart-home-a5e0f.firebaseio.com",
+            projectId: "smart-home-a5e0f",
+            storageBucket: "smart-home-a5e0f.appspot.com",
+            messagingSenderId: "413738318134"
+        };
+        firebase.initializeApp(config);
+
+        //Variables
+        var database = firebase.database();
+        var dialog = document.querySelector('#dialog');
+        var room = "Fabians Zimmer";
+        var error = document.getElementById("error");
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in.
+                var email = user.email;
+                var emailVerified = user.emailVerified;
+                var isAnonymous = user.isAnonymous;
+                var uid = user.uid;
+                var providerData = user.providerData;
+            } else {
+                window.location.href = "../../index.html"
+            }
+        });
+
+        function logout() {
+            firebase.auth().signOut().then(function() {}, function(error) {
+                console.log("error");
+            });
+        }
+
+        function setTV(i){
+            var updates = {};
+            updates[room + "/Fernseher/code"] = i;
+            database.ref().update(updates);
+        }
+
+        (function() {
+            'use strict';
+            if (!dialog.showModal) {
+                dialogPolyfill.registerDialog(dialog);
+            }
+            dialog.showModal();
+            error.innerHTML = "";
+            fillRooms();
+        }());
+
+        function abort(){
+            window.open("../main.html","_self");
+        }
+
+        function selectRoom(){
+            var selectData = document.getElementById("room_input").value;
+            if(selectData != ""){
+                room = selectData;
+                console.log(room);
+                dialog.close();
+            }
+            else{
+                error.innerHTML = "Bitte wähle einen Raum aus.";
+            }
+        }
+
+        function fillRooms(){
+            var ul = document.getElementById("room_dropdown_ul");
+            var query = firebase.database().ref("/").orderByKey();
+            var roomDropdown = document.getElementById("room_dropdown_ul");
+            query.once("value")
+                .then(function(snapshot) {
+                    snapshot.forEach(function(childSnapshot) {
+                        var key = childSnapshot.key;
+                        var data = childSnapshot.val();
+                        if (key != "Users") {
+                                if (Object.keys(data).includes('Fernseher')) {
+                                    var li = document.createElement("li");
+                                    li.appendChild(document.createTextNode(key));
+                                    li.classList.add("mdl-menu__item");
+                                    li.setAttribute("data-val", "key");
+                                    ul.appendChild(li);
+                                    getmdlSelect.init("#room_dropdown");
+                                    componentHandler.upgradeDom();
+                                }
+                        }
+                    });
+                });
+        }
+    </script>
