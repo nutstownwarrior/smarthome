@@ -30,6 +30,9 @@
                 <span class="mdl-layout-title">Fernbedienung</span>
                 <!-- Add spacer, to align navigation to the right -->
                 <div class="mdl-layout-spacer"></div>
+                <button class="mdl-button mdl-js-button mdl-button--icon" onclick="openFullscreen()">
+                        <i class="material-icons" id="fullscreen_icon">fullscreen</i>
+                    </button>
                 <button class="mdl-button mdl-js-button mdl-button--icon" onclick="logout()">
                     <i class="material-icons">exit_to_app</i>
                 </button>
@@ -144,6 +147,8 @@
         var dialog = document.querySelector('#dialog');
         var room = "Fabians Zimmer";
         var error = document.getElementById("error");
+        var elem = document.documentElement;
+        var fullscreenIcon = document.getElementById("fullscreen_icon");
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
@@ -188,7 +193,6 @@
             var selectData = document.getElementById("room_input").value;
             if(selectData != ""){
                 room = selectData;
-                console.log(room);
                 dialog.close();
             }
             else{
@@ -219,4 +223,38 @@
                     });
                 });
         }
+
+        function openFullscreen() {
+            if (window.innerHeight == screen.height) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    /* Firefox */
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    /* Chrome, Safari and Opera */
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    /* IE/Edge */
+                    document.msExitFullscreen();
+                }
+                fullscreenIcon.innerHTML = "fullscreen";
+            } else {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.mozRequestFullScreen) {
+                    /* Firefox */
+                    elem.mozRequestFullScreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    /* Chrome, Safari and Opera */
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) {
+                    /* IE/Edge */
+                    elem.msRequestFullscreen();
+                }
+                fullscreenIcon.innerHTML = "fullscreen_exit";
+            }
+            componentHandler.upgradeDom();
+        }
+
     </script>
