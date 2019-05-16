@@ -1,0 +1,12 @@
+.mdl-layout__header .mdl-layout__drawer-button {
+    background-color: #F5F5F5;
+    color: rgb(66, 66, 66);
+}
+.mdl-card{
+    margin: auto;
+    text-align: center;
+}
+#confirm{
+    margin-right: 3%;
+    margin-left: 3%;
+}

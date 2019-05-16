@@ -22,7 +22,7 @@
         <title>Haussteuerung</title>
     </head>
 
-    <body onresize="resize()">
+    <body>
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
             mdl-layout--fixed-header">
             <header class="mdl-layout__header">
@@ -31,9 +31,6 @@
                     <div class="mdl-layout-spacer"></div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
                   mdl-textfield--floating-label mdl-textfield--align-right">
-                        <label class="mdl-button mdl-js-button mdl-button--icon" for="search_field">
-                            <i class="material-icons">search</i>
-                        </label>
                         <div class="mdl-textfield__expandable-holder">
                             <input class="mdl-textfield__input" type="text" name="sample" id="search_field" oninput="search()">
                         </div>
@@ -48,10 +45,9 @@
             </header>
             <div class="mdl-layout__drawer mdl-color--blue-grey-800">
                 <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link" href="Seiten/remote.html">Fernbedienungen</a>
-                    <a class="mdl-navigation__link" href="">Link</a>
-                    <a class="mdl-navigation__link" href="">Link</a>
-                    <a class="mdl-navigation__link" href="">Link</a>
+                    <a class="mdl-navigation__link" href="Seiten/devices/devices.html">Geräte</a>
+                    <a class="mdl-navigation__link" href="Seiten/actions/actions.html">Aktionen</a>
+                    <a class="mdl-navigation__link" href="Seiten/remote/remote.html">Fernbedienungen</a>
                 </nav>
             </div>
             <main class="mdl-layout__content">
@@ -63,35 +59,6 @@
         <button id="add-button" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored mdl-color--red mdl-js-ripple-effect dialog-button">
             <i class="material-icons md-light">add</i>
         </button>
-        <dialog id="dialog" class="mdl-dialog">
-            <h3 class="mdl-dialog__title">Gerät/Aktion hinzufügen</h3>
-            <div class="mdl-dialog__content">
-                <p>
-                    Hier kannst du Geräte oder Aktionen zu deinem Starbildschirm hinzufügen. Wähle dazu einfach ein Gerät aus der Liste, oder erstelle eine Aktion.
-                </p>
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="room_dropdown">
-                    <input type="text" value="" class="mdl-textfield__input" id="room_input" onchange="fillDevices()" readonly>
-                    <input type="hidden" value="" name="sample4">
-                    <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-                    <label for="room_input" class="mdl-textfield__label">Raum</label>
-                    <ul for="room_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="room_dropdown_ul">
-                    </ul>
-                </div>
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="device_dropdown">
-                    <input type="text" value="" class="mdl-textfield__input" id="device_input" readonly>
-                    <input type="hidden" value="" name="sample5">
-                    <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-                    <label for="device_input" class="mdl-textfield__label">Gerät</label>
-                    <ul for="device_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="device_dropdown_ul">
-                    </ul>
-                </div>
-                <h5 id="error"></h5>
-            </div>
-            <div class="mdl-dialog__actions">
-                <button type="button" onclick="addDevice()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Fertig</button>
-                <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="exit_button">Abbrechen</button>
-            </div>
-        </dialog>
     </body>
 
     </html>
@@ -109,14 +76,8 @@
 
         //Variables
         var database = firebase.database();
-        var roomSelect = document.getElementById("room_dropdown");
-        var deviceSelect = document.getElementById("device_dropdown");
         var elem = document.documentElement;
         var fullscreenIcon = document.getElementById("fullscreen_icon");
-        var dialogButton = document.querySelector('.dialog-button');
-        var dialog = document.querySelector('#dialog');
-        var error = document.getElementById("error");
-        var idList = [];
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 // User is signed in.
@@ -137,85 +98,6 @@
             firebase.auth().signOut().then(function() {}, function(error) {
                 console.log("error");
             });
-        }
-
-        (function() {
-            'use strict';
-            if (!dialog.showModal) {
-                dialogPolyfill.registerDialog(dialog);
-            }
-            dialogButton.addEventListener('click', function() {
-                dialog.showModal();
-                error.innerHTML = "";
-                roomSelect.classList.remove("is-dirty");
-                deviceSelect.classList.remove("is-dirty");
-                fillRooms();
-            });
-            dialog.querySelector('#exit_button').addEventListener('click', function() {
-                dialog.close();
-                var ul = document.getElementById("device_dropdown_ul");
-                while (ul.firstChild) {
-                    ul.removeChild(ul.firstChild);
-                }
-            });
-        }());
-
-        function fillRooms() {
-            var ul = document.getElementById("room_dropdown_ul");
-            while (ul.firstChild) {
-                ul.removeChild(ul.firstChild);
-            }
-            getmdlSelect.init("#room_dropdown");
-            getmdlSelect.init("#device_dropdown");
-            var query = firebase.database().ref("/").orderByKey();
-            var roomDropdown = document.getElementById("room_dropdown_ul");
-            query.once("value")
-                .then(function(snapshot) {
-                    snapshot.forEach(function(childSnapshot) {
-                        // key will be "ada" the first time and "alan" the second time
-                        var key = childSnapshot.key;
-                        if (key != "Users") {
-                            var li = document.createElement("li");
-                            li.appendChild(document.createTextNode(key));
-                            li.classList.add("mdl-menu__item");
-                            li.setAttribute("data-val", "key");
-                            ul.appendChild(li);
-                            getmdlSelect.init("#room_dropdown");
-                            componentHandler.upgradeDom();
-                        }
-                    });
-                });
-        }
-
-        function fillDevices() {
-            var ul = document.getElementById("device_dropdown_ul");
-            while (ul.firstChild) {
-                ul.removeChild(ul.firstChild);
-            }
-            document.getElementById("device_input").value = "";
-            deviceSelect.classList.remove("is-dirty");
-            getmdlSelect.init("#device_dropdown");
-            var room = document.getElementById("room_input").value;
-            var query = firebase.database().ref("/" + room).orderByKey();
-            var roomDropdown = document.getElementById("room_dropdown_ul");
-            query.once("value")
-                .then(function(snapshot) {
-                    snapshot.forEach(function(childSnapshot) {
-                        var key = childSnapshot.key;
-                        var data = childSnapshot.val();
-                        if(data.type != "ir"){
-                            var li = document.createElement("li");
-                            var ul = document.getElementById("device_dropdown_ul");
-                            li.appendChild(document.createTextNode(key));
-                            li.classList.add("mdl-menu__item");
-                            li.setAttribute("data-val", "key");
-                            ul.appendChild(li);
-                            getmdlSelect.init("#device_dropdown");
-                            componentHandler.upgradeDom();
-                        }
-                    });
-                });
-
         }
 
         function openFullscreen() {
@@ -249,153 +131,6 @@
                 fullscreenIcon.innerHTML = "fullscreen_exit";
             }
             componentHandler.upgradeDom();
-        }
-
-        function constructCards() {
-            var grid = document.getElementById("grid");
-            while (grid.firstChild) {
-                grid.removeChild(grid.firstChild);
-            }
-            idList = [];
-            var query = database.ref("/Users/" + firebase.auth().currentUser.uid + "/devices").orderByKey();
-            query.once("value")
-                .then(function(snapshot) {
-                    snapshot.forEach(function(childSnapshot) {
-                        var key = childSnapshot.key;
-                        var data = childSnapshot.val();
-                        var locationArray = data.path.split("/");
-                        var div = document.createElement("div");
-                        var supTextDiv = document.createElement("div");
-                        var wrapperDiv = document.createElement("div");
-                        var menu = document.createElement("div");
-                        var button = document.createElement("button");
-                        var icon = document.createElement("i");
-                        var label = document.createElement("label");
-                        var input = document.createElement("input");
-                        var title = document.createElement("div");
-                        var titleText = document.createElement("h4");
-                        icon.classList.add("material-icons");
-                        icon.innerHTML = "close";
-                        button.appendChild(icon);
-                        button.classList.add("mdl-button", "mdl-button--icon", "mdl-js-button", "mdl-js-ripple-effect");
-                        button.setAttribute("id", data.path + "1");
-                        menu.appendChild(button);
-                        menu.classList.add("mdl-card__menu");
-                        title.classList.add("mdl-card__title");
-                        titleText.classList.add("mdl-card__title-text");
-                        titleText.innerHTML = locationArray[1] + "<br>Ort: " + locationArray[0];
-                        title.appendChild(titleText);
-                        div.appendChild(menu);
-                        div.appendChild(title);
-                        //titleText.style.color = "white";
-                        div.classList.add("mdl-cell", "mdl-cell--4-col", "mdl-card", "mdl-shadow--4dp");
-                        div.setAttribute("id", data.path + "1");
-                        div.style.backgroundImage = "url('Bilder/light_bulb.jpg')";
-                        div.style.backgroundSize = "100% 100%";
-                        idList.push(data.path + "1");
-                        //add action
-                        firebase.database().ref(data.path + "/type").once('value').then(function(device) {
-                            switch (device.val()) {
-                                case "toggle":
-                                    wrapperDiv.classList.add("wrapper");
-                                    supTextDiv.classList.add("mdl-card__supporting-text");
-                                    input.classList.add("mdl-switch__input");
-                                    input.setAttribute("type", "checkbox");
-                                    input.setAttribute("id", data.path);
-                                    label.classList.add("mdl-switch", "mdl-js-switch", "mdl-js-ripple-effect");
-                                    label.appendChild(input);
-                                    wrapperDiv.appendChild(label);
-                                    supTextDiv.appendChild(wrapperDiv);
-                                    div.appendChild(supTextDiv);
-                                    firebase.database().ref(data.path + "/status").on('value', function(status) {
-                                        if (status.val() == 1) {
-                                            label.MaterialSwitch.on();
-                                        } else if (status.val() == 0) {
-                                            label.MaterialSwitch.off();
-                                        }
-                                    })
-                                    div.style.height = div.offsetWidth + "px";
-                                    componentHandler.upgradeDom();
-                                    break;
-                            }
-                        });
-                        grid.appendChild(div);
-                        componentHandler.upgradeDom();
-                    });
-                });
-        }
-
-        function addDevice() {
-            var room = document.getElementById("room_input").value;
-            var device = document.getElementById("device_input").value;
-            var status = true;
-            if (room !== null && room !== '' && device !== null && device !== '') {
-                var url = room + "/" + device;
-                var query = database.ref("/Users/" + firebase.auth().currentUser.uid + "/devices").orderByKey();
-                query.once("value").then(function(snapshot) {
-                    snapshot.forEach(function(childSnapshot) {
-                        var childData = childSnapshot.val();
-                        if (childData.path == url) {
-                            error.innerHTML = "Dieses Gerät ist bereits in deiner Liste";
-                            status = false;
-                        }
-                    });
-                    if (status) {
-                        database.ref("/Users/" + firebase.auth().currentUser.uid + "/devices/" + room + device).set({
-                            path: url
-                        });
-                        error.innerHTML = "";
-                        dialog.close();
-                    }
-                })
-            } else {
-                error.innerHTML = "Bitte Wähle einen Raum und ein Gerät aus";
-            }
-        }
-
-        document.querySelector('#grid').addEventListener('click', function(event) {
-            var changes = {};
-            if (event.target.classList.contains('mdl-switch__input')) {
-                firebase.database().ref(event.target.id + "/status").once('value').then(function(status) {
-                    if (status.val() == 1) {
-                        changes[event.target.id + "/status"] = 0;
-                    } else {
-                        changes[event.target.id + "/status"] = 1;
-                    }
-                    firebase.database().ref().update(changes);
-                });
-            } else if (event.target.parentElement.classList.contains('mdl-button--icon')) {
-                var device = event.target.parentElement.id.replace("/", "")
-                database.ref("/Users/" + firebase.auth().currentUser.uid + "/devices/" + device.replace("1", "") + "/").remove();
-            }
-        })
-
-        function search(){
-            var search = document.getElementById("search_field").value;
-            if(search == ""){
-                for(var i = 0; i < idList.length; i++){
-                    console.log("1");
-                    document.getElementById(idList[i]).style.display = "block";
-                }
-                return;
-            }
-            for(var i = 0; i < idList.length; i++){
-                if(idList[i].includes(search)){
-                    console.log("2");
-                    document.getElementById(idList[i]).style.display = "block";
-                }
-                else{
-                    console.log("3");
-                    document.getElementById(idList[i]).style.display = "none";
-                }
-            }
-        }
-
-        function resize(){
-            var elements = document.getElementById('grid').childNodes;
-            for (var i = 0; i < elements.length; i++) {
-                elements[i].style.height = elements[i].offsetWidth + "px";
-            }
         }
 
     </script>
