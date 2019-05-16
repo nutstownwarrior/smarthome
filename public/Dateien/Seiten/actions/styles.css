@@ -2,11 +2,24 @@
     background-color: #F5F5F5;
     color: rgb(66, 66, 66);
 }
+
 .mdl-card{
     margin: auto;
     text-align: center;
 }
-#confirm{
-    margin-right: 3%;
-    margin-left: 3%;
+
+@media only screen and (max-width: 1024px) {
+    .mdl-dialog {
+        width: 85vw;
+    }
+}
+
+#add-button {
+    position: fixed;
+    display: block;
+    right: 0;
+    bottom: 0;
+    margin-right: 40px;
+    margin-bottom: 40px;
+    z-index: 900;
 }
