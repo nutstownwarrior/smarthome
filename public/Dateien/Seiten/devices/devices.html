@@ -268,8 +268,6 @@
                         var menu = document.createElement("div");
                         var button = document.createElement("button");
                         var icon = document.createElement("i");
-                        var label = document.createElement("label");
-                        var input = document.createElement("input");
                         var title = document.createElement("div");
                         var titleText = document.createElement("h4");
                         icon.classList.add("material-icons");
@@ -283,9 +281,9 @@
                         titleText.classList.add("mdl-card__title-text");
                         titleText.innerHTML = locationArray[1] + "<br>Ort: " + locationArray[0];
                         title.appendChild(titleText);
+                        supTextDiv.classList.add("mdl-card__supporting-text");
                         div.appendChild(menu);
                         div.appendChild(title);
-                        //titleText.style.color = "white";
                         div.classList.add("mdl-cell", "mdl-cell--4-col", "mdl-card", "mdl-shadow--4dp");
                         div.setAttribute("id", data.path + "1");
                         idList.push(data.path + "1");
@@ -293,8 +291,9 @@
                         firebase.database().ref(data.path + "/type").once('value').then(function(device) {
                             switch (device.val()) {
                                 case "toggle":
+                                    var input = document.createElement("input");
+                                    var label = document.createElement("label");
                                     wrapperDiv.classList.add("wrapper");
-                                    supTextDiv.classList.add("mdl-card__supporting-text");
                                     input.classList.add("mdl-switch__input");
                                     input.setAttribute("type", "checkbox");
                                     input.setAttribute("id", data.path);
@@ -302,17 +301,24 @@
                                     label.appendChild(input);
                                     wrapperDiv.appendChild(label);
                                     supTextDiv.appendChild(wrapperDiv);
-                                    div.appendChild(supTextDiv);
                                     firebase.database().ref(data.path + "/status").on('value', function(status) {
                                         if (status.val() == 1) {
                                             label.MaterialSwitch.on();
                                         } else if (status.val() == 0) {
                                             label.MaterialSwitch.off();
                                         }
-                                    })
-                                    componentHandler.upgradeDom();
-                                    break;
+                                    });
+                                break;
+                                case "sensor":
+                                    var text = document.createElement("h4");
+                                    firebase.database().ref(data.path + "/value").on('value', function(status){
+                                    text.innerText = status.val() + "°C";
+                                });
+                                supTextDiv.appendChild(text);
+                                break;
                             }
+                            div.appendChild(supTextDiv);
+                            componentHandler.upgradeDom();
                         });
                         grid.appendChild(div);
                         componentHandler.upgradeDom();

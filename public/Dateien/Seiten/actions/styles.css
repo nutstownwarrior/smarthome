@@ -14,12 +14,9 @@
     }
 }
 
-#add-button {
+.mdl-fab-bottom-right {
     position: fixed;
-    display: block;
-    right: 0;
-    bottom: 0;
-    margin-right: 40px;
-    margin-bottom: 40px;
-    z-index: 900;
+    bottom: 24px;
+    right: 24px;
+    transition: bottom .25s cubic-bezier(0,0,.2,1);
 }
