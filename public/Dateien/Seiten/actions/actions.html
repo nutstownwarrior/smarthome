@@ -66,7 +66,7 @@
         </div>
         <main class="mdl-layout__content">
             <div class="page-content">
-                <div class="mdl-grid">
+                <div class="mdl-grid" id="grid">
 
                 </div>
             </div>
@@ -114,6 +114,9 @@
                 var isAnonymous = user.isAnonymous;
                 var uid = user.uid;
                 var providerData = user.providerData;
+                database.ref("/Users/" + firebase.auth().currentUser.uid + "/actions").on('value', function(snapshot) {
+                    constructCards();
+                });
             } else {
                 window.location.href = "../../index.html"
             }
@@ -174,6 +177,59 @@
                 fullscreenIcon.innerHTML = "fullscreen_exit";
             }
             componentHandler.upgradeDom();
+        }
+
+        //function that constructs and adds the different actions to the grid
+
+        function constructCards() {
+            var grid = document.getElementById("grid");
+            while (grid.firstChild) {
+                grid.removeChild(grid.firstChild);
+            }
+            idList = [];
+            var query = database.ref("/Users/" + firebase.auth().currentUser.uid + "/actions").orderByKey();
+            query.once("value")
+                .then(function (snapshot) {
+                    snapshot.forEach(function (childSnapshot) {
+                        var name = childSnapshot.key;
+                        var data = childSnapshot.val();
+                        var div = document.createElement("div");
+                        var supTextDiv = document.createElement("div");
+                        var wrapperDiv = document.createElement("div");
+                        var menu = document.createElement("div");
+                        var button = document.createElement("button");
+                        var icon = document.createElement("i");
+                        var title = document.createElement("div");
+                        var titleText = document.createElement("h4");
+                        icon.classList.add("material-icons");
+                        icon.innerHTML = "close";
+                        button.appendChild(icon);
+                        button.classList.add("mdl-button", "mdl-button--icon", "mdl-js-button", "mdl-js-ripple-effect");
+                        button.setAttribute("id", name);
+                        menu.appendChild(button);
+                        menu.classList.add("mdl-card__menu");
+                        title.classList.add("mdl-card__title");
+                        titleText.classList.add("mdl-card__title-text");
+                        titleText.innerHTML = name;
+                        title.appendChild(titleText);
+                        supTextDiv.classList.add("mdl-card__supporting-text");
+                        div.appendChild(menu);
+                        div.appendChild(title);
+                        div.classList.add("mdl-cell", "mdl-cell--4-col", "mdl-card", "mdl-shadow--4dp");
+                        div.setAttribute("id", name + "1");
+                        idList.push(name);
+                        //add action
+                        var on_button = document.createElement("button");
+                        on_button.classList.add("mdl-button", "mdl-js-button", "mdl-button--raised", "mdl-js-ripple-effect", "mdl-button--colored");
+                        on_button.setAttribute("id", name + "2");
+                        on_button.innerText = "starten";
+                        supTextDiv.appendChild(on_button);
+                        div.appendChild(supTextDiv);
+                        componentHandler.upgradeDom();
+                        grid.appendChild(div);
+                        componentHandler.upgradeDom();
+                    })
+                })
         }
 
     </script>

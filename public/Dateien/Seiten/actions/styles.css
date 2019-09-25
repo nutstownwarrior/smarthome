@@ -3,11 +3,6 @@
     color: rgb(66, 66, 66);
 }
 
-.mdl-card{
-    margin: auto;
-    text-align: center;
-}
-
 @media only screen and (max-width: 1024px) {
     .mdl-dialog {
         width: 85vw;
@@ -19,4 +14,8 @@
     bottom: 24px;
     right: 24px;
     transition: bottom .25s cubic-bezier(0,0,.2,1);
+}
+
+.mdl-card__supporting-text{
+    text-align: center;
 }
