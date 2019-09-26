@@ -66,7 +66,7 @@
         <h3 class="mdl-dialog__title">Gerät hinzufügen</h3>
         <div class="mdl-dialog__content">
             <p>
-                Hier kannst du Geräte oder Aktionen zu deinem Starbildschirm hinzufügen. Wähle dazu einfach ein Gerät aus der Liste, oder erstelle eine Aktion.
+                Hier kannst du Geräte zu deinem Account hinzufügen. Wähle dazu einfach ein Gerät aus der Liste und klicke auf fertig.
             </p>
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="room_dropdown">
                 <input type="text" value="" class="mdl-textfield__input" id="room_input" onchange="fillDevices()" readonly>
@@ -158,6 +158,8 @@
             });
         }());
 
+        //gets the names of every room from the database and adds them to the dropdownn field
+
         function fillRooms() {
             var ul = document.getElementById("room_dropdown_ul");
             while (ul.firstChild) {
@@ -184,6 +186,8 @@
                     });
                 });
         }
+
+        //gets the devices of the selected room from the database and adds them to the dropdownn field
 
         function fillDevices() {
             var ul = document.getElementById("device_dropdown_ul");
@@ -215,6 +219,8 @@
                 });
 
         }
+
+        //sets the webapp to fullscreen mode
 
         function openFullscreen() {
             if (window.innerHeight == screen.height) {
@@ -248,6 +254,8 @@
             }
             componentHandler.upgradeDom();
         }
+
+        //loads the devices the user added to his account and constructs cards for all of them
 
         function constructCards() {
             var grid = document.getElementById("grid");
@@ -326,6 +334,8 @@
                 });
         }
 
+        //adds a new device to the users account
+
         function addDevice() {
             var room = document.getElementById("room_input").value;
             var device = document.getElementById("device_input").value;
@@ -354,6 +364,8 @@
             }
         }
 
+        //detects which button inside the grid pressed and executes the according function
+
         document.querySelector('#grid').addEventListener('click', function(event) {
             var changes = {};
             if (event.target.classList.contains('mdl-switch__input')) {
@@ -366,10 +378,12 @@
                     firebase.database().ref().update(changes);
                 });
             } else if (event.target.parentElement.classList.contains('mdl-button--icon')) {
-                var device = event.target.parentElement.id.replace("/", "")
+                var device = event.target.parentElement.id.replace("/", "");
                 database.ref("/Users/" + firebase.auth().currentUser.uid + "/devices/" + device.replace("1", "") + "/").remove();
             }
-        })
+        });
+
+        //executes a search through all cards in the grid based on the user input and shows only the cards matching the input
 
         function search() {
             var search = document.getElementById("search_field").value;

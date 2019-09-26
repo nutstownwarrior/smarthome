@@ -76,8 +76,34 @@
         <h3 class="mdl-dialog__title">Aktion hinzufügen</h3>
         <div class="mdl-dialog__content">
             <p>
-                Hier kannst du eine Aktion hinzufügen.
+                Hier kannst du Aktionen erstellen und zu deinem Konto hinzufügen. Wähle dazu einfach einen Raum und ein Gerät sowie was damit geschehen soll. Wiederhole dies so oft bis du deine Aktion fertig hast.
             </p>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="room_dropdown">
+                <input type="text" value="" class="mdl-textfield__input" id="room_input" onchange="fillDevices()" readonly>
+                <input type="hidden" value="" name="sample4">
+                <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                <label for="room_input" class="mdl-textfield__label">Raum</label>
+                <ul for="room_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="room_dropdown_ul">
+                </ul>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="device_dropdown">
+                <input type="text" value="" class="mdl-textfield__input" id="device_input" readonly>
+                <input type="hidden" value="" name="sample5">
+                <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                <label for="device_input" class="mdl-textfield__label">Gerät</label>
+                <ul for="device_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="device_dropdown_ul">
+                </ul>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="action_dropdown">
+                <input type="text" value="" class="mdl-textfield__input" id="action_input" readonly>
+                <input type="hidden" value="" name="sample6">
+                <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                <label for="action_input" class="mdl-textfield__label">Status</label>
+                <ul for="action_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="action_dropdown_ul">
+                    <li class="mdl-menu__item">An</li>
+                    <li class="mdl-menu__item">Aus</li>
+                </ul>
+            </div>
             <h6 id="error"></h6>
         </div>
         <div class="mdl-dialog__actions">
@@ -105,16 +131,13 @@
         var elem = document.documentElement;
         var fullscreenIcon = document.getElementById("fullscreen_icon");
         var dialogButton = document.getElementById("add-button");
+        var uid;
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 // User is signed in.
-                var email = user.email;
-                var emailVerified = user.emailVerified;
-                var isAnonymous = user.isAnonymous;
-                var uid = user.uid;
-                var providerData = user.providerData;
-                database.ref("/Users/" + firebase.auth().currentUser.uid + "/actions").on('value', function(snapshot) {
+                uid = user.uid;
+                database.ref("/Users/" + uid + "/actions").on('value', function(snapshot) {
                     constructCards();
                 });
             } else {
@@ -145,6 +168,8 @@
                 dialog.close();
             });
         }());
+
+        //toggles the webapps fullscreen mode
 
         function openFullscreen() {
             if (window.innerHeight == screen.height) {
@@ -219,11 +244,18 @@
                         div.setAttribute("id", name + "1");
                         idList.push(name);
                         //add action
-                        var on_button = document.createElement("button");
-                        on_button.classList.add("mdl-button", "mdl-js-button", "mdl-button--raised", "mdl-js-ripple-effect", "mdl-button--colored");
+                        let on_button = document.createElement("button");
+                        on_button.classList.add("mdl-button", "mdl-js-button", "mdl-button--raised", "mdl-js-ripple-effect", "mdl-button--colored", "on");
                         on_button.setAttribute("id", name + "2");
-                        on_button.innerText = "starten";
+                        on_button.innerText = "Starten";
+                        on_button.style.margin = "5%";
                         supTextDiv.appendChild(on_button);
+                        let off_button = document.createElement("button");
+                        off_button.classList.add("mdl-button", "mdl-js-button", "mdl-button--raised", "mdl-js-ripple-effect", "mdl-button--colored", "off");
+                        off_button.setAttribute("id", name + "3");
+                        off_button.innerText = "Stoppen";
+                        off_button.style.margin = "5%";
+                        supTextDiv.appendChild(off_button);
                         div.appendChild(supTextDiv);
                         componentHandler.upgradeDom();
                         grid.appendChild(div);
@@ -231,5 +263,44 @@
                     })
                 })
         }
+
+        //detects which button inside the grid pressed and executes the according function
+
+        document.querySelector('#grid').addEventListener('click', function(event) {
+            if (event.target.parentElement.classList.contains("on")) {
+                let data = database.ref("Users" + "/" + uid + "/actions/" + event.target.parentElement.id.replace("2",""));
+                data.on('value', function(snapshot) {
+                    snapshot.forEach(function(childSnapshot){
+                        let childData = childSnapshot.val();
+                        let changes = {};
+                        changes[childData.path] = parseInt(childData.status);
+                        database.ref().update(changes);
+                    });
+                });
+            }
+            else if (event.target.parentElement.classList.contains('mdl-button--icon')) {
+                console.log("blublub");
+                let device = event.target.parentElement.id;
+                database.ref("Users/" + uid + "/actions/" + device).remove();
+            }
+            else if (event.target.parentElement.classList.contains("off")){
+                let data = database.ref("Users" + "/" + uid + "/actions/" + event.target.parentElement.id.replace("3",""));
+                data.on('value', function(snapshot) {
+                    snapshot.forEach(function(childSnapshot){
+                        let childData = childSnapshot.val();
+                        let changes = {};
+                        switch(childData.status){
+                            case 0:
+                                changes[childData.path] = 1;
+                                break;
+                            case 1:
+                                changes[childData.path] = 0;
+                                break;
+                        }
+                        database.ref().update(changes);
+                    });
+                });
+            }
+        });
 
     </script>

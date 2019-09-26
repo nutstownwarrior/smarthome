@@ -9,6 +9,12 @@
     }
 }
 
+@media not screen and (max-width: 1024px) {
+    .mdl-dialog {
+        width: 40vw;
+    }
+}
+
 .mdl-fab-bottom-right {
     position: fixed;
     bottom: 24px;
