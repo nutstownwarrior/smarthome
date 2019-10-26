@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang=de"">
-
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width = device-width, initial-scale = 1.0">
@@ -78,31 +77,61 @@
             <p>
                 Hier kannst du Aktionen erstellen und zu deinem Konto hinzufügen. Wähle dazu einfach einen Raum und ein Gerät sowie was damit geschehen soll. Wiederhole dies so oft bis du deine Aktion fertig hast.
             </p>
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="room_dropdown">
-                <input type="text" value="" class="mdl-textfield__input" id="room_input" onchange="fillDevices()" readonly>
-                <input type="hidden" value="" name="sample4">
-                <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-                <label for="room_input" class="mdl-textfield__label">Raum</label>
-                <ul for="room_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="room_dropdown_ul">
-                </ul>
-            </div>
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="device_dropdown">
-                <input type="text" value="" class="mdl-textfield__input" id="device_input" readonly>
-                <input type="hidden" value="" name="sample5">
-                <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-                <label for="device_input" class="mdl-textfield__label">Gerät</label>
-                <ul for="device_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="device_dropdown_ul">
-                </ul>
-            </div>
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="action_dropdown">
-                <input type="text" value="" class="mdl-textfield__input" id="action_input" readonly>
-                <input type="hidden" value="" name="sample6">
-                <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-                <label for="action_input" class="mdl-textfield__label">Status</label>
-                <ul for="action_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="action_dropdown_ul">
-                    <li class="mdl-menu__item">An</li>
-                    <li class="mdl-menu__item">Aus</li>
-                </ul>
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="room_dropdown">
+                        <input type="text" value="" class="mdl-textfield__input" id="room_input" onchange="fillDevices()" readonly>
+                        <input type="hidden" value="" name="sample4">
+                        <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                        <label for="room_input" class="mdl-textfield__label">Raum</label>
+                        <ul for="room_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="room_dropdown_ul">
+                        </ul>
+                    </div>
+                </div>
+                <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="device_dropdown">
+                        <input type="text" value="" class="mdl-textfield__input" id="device_input" readonly>
+                        <input type="hidden" value="" name="sample5">
+                        <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                        <label for="device_input" class="mdl-textfield__label">Gerät</label>
+                        <ul for="device_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="device_dropdown_ul">
+                        </ul>
+                    </div>
+                </div>
+                <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="action_dropdown">
+                        <input type="text" value="" class="mdl-textfield__input" id="action_input" readonly>
+                        <input type="hidden" value="" name="sample6">
+                        <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                        <label for="action_input" class="mdl-textfield__label">Status</label>
+                        <ul for="action_input" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="action_dropdown_ul">
+                            <li class="mdl-menu__item">An</li>
+                            <li class="mdl-menu__item">Aus</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mdl-cell mdl-cell--12-col">
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect" id="add">
+                        <i class="material-icons">add</i>
+                    </button>
+                    <label class="mdl-label" for="add">
+                        Hinzufügen
+                    </label>
+                </div>
+                <div class="mdl-cell mdl-cell--12-col">
+                    <ul class="mdl-list">
+                        <li class="mdl-list_item">
+                            <h6 class="mdl-list__item-primary-content">
+                                Testlampe in Fabians Zimmer anschalten
+                            </h6>
+                        </li>
+                        <li class="mdl-list_item">
+                            <h6 class="mdl-list__item-primary-content">
+                                Testlampe 2 in Fabians Zimmer anschalten
+                            </h6>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <h6 id="error"></h6>
         </div>
@@ -131,6 +160,7 @@
         var elem = document.documentElement;
         var fullscreenIcon = document.getElementById("fullscreen_icon");
         var dialogButton = document.getElementById("add-button");
+        var deviceSelect = document.getElementById("device_dropdown");
         var uid;
 
         firebase.auth().onAuthStateChanged(function(user) {
@@ -162,10 +192,17 @@
             }
             dialogButton.addEventListener('click', function() {
                 dialog.showModal();
+                fillRooms();
                 error.innerHTML = "";
             });
             dialog.querySelector('#exit_button').addEventListener('click', function() {
                 dialog.close();
+                document.getElementById("room_dropdown").classList.remove("is-dirty");
+                document.getElementById("device_dropdown").classList.remove("is-dirty");
+                let ul = document.getElementById("device_dropdown_ul");
+                while (ul.firstChild){
+                    ul.removeChild(ul.firstChild);
+                }
             });
         }());
 
@@ -302,5 +339,61 @@
                 });
             }
         });
+
+        function fillRooms() {
+            let ul = document.getElementById("room_dropdown_ul");
+            while (ul.firstChild) {
+                ul.removeChild(ul.firstChild);
+            }
+            getmdlSelect.init("#room_dropdown");
+            getmdlSelect.init("#device_dropdown");
+            let query = firebase.database().ref("/").orderByKey();
+            query.once("value")
+                .then(function(snapshot) {
+                    snapshot.forEach(function(childSnapshot) {
+                        // key will be "ada" the first time and "alan" the second time
+                        let key = childSnapshot.key;
+                        if (key != "Users") {
+                            let li = document.createElement("li");
+                            li.appendChild(document.createTextNode(key));
+                            li.classList.add("mdl-menu__item");
+                            li.setAttribute("data-val", "key");
+                            ul.appendChild(li);
+                            getmdlSelect.init("#room_dropdown");
+                            componentHandler.upgradeDom();
+                        }
+                    });
+                });
+        }
+
+        function fillDevices() {
+            let ul = document.getElementById("device_dropdown_ul");
+            while (ul.firstChild) {
+                ul.removeChild(ul.firstChild);
+            }
+            document.getElementById("device_input").value = "";
+            deviceSelect.classList.remove("is-dirty");
+            getmdlSelect.init("#device_dropdown");
+            let room = document.getElementById("room_input").value;
+            let query = firebase.database().ref("/" + room).orderByKey();
+            let roomDropdown = document.getElementById("room_dropdown_ul");
+            query.once("value")
+                .then(function(snapshot) {
+                    snapshot.forEach(function(childSnapshot) {
+                        let key = childSnapshot.key;
+                        let data = childSnapshot.val();
+                        if (data.type != "ir" && data.type != "sensor") {
+                            var li = document.createElement("li");
+                            li.appendChild(document.createTextNode(key));
+                            li.classList.add("mdl-menu__item");
+                            li.setAttribute("data-val", "key");
+                            ul.appendChild(li);
+                            getmdlSelect.init("#device_dropdown");
+                            componentHandler.upgradeDom();
+                        }
+                    });
+                });
+
+        }
 
     </script>

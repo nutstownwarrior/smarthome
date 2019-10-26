@@ -1,6 +1,5 @@
-    <!DOCTYPE html>
-    <html>
-
+<!DOCTYPE html>
+<html lang="de">
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width = device-width, initial-scale = 1.0">
@@ -168,7 +167,6 @@
             getmdlSelect.init("#room_dropdown");
             getmdlSelect.init("#device_dropdown");
             var query = firebase.database().ref("/").orderByKey();
-            var roomDropdown = document.getElementById("room_dropdown_ul");
             query.once("value")
                 .then(function(snapshot) {
                     snapshot.forEach(function(childSnapshot) {

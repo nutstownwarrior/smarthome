@@ -34,9 +34,13 @@
 #define WIFI_SSID "Test"
 #define WIFI_PASSWORD "Fabian123"
 
-void setup() {
-  Serial.begin(9600);
 
+void setup() {
+  Serial.begin(9600,SERIAL_8N1,SERIAL_TX_ONLY);
+
+  pinMode(0 ,OUTPUT);
+  digitalWrite(0 , LOW);
+  pinMode(3 ,INPUT);
   // connect to wifi.
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("connecting");
@@ -47,8 +51,6 @@ void setup() {
   Serial.println();
   Serial.print("connected: ");
   Serial.println(WiFi.localIP());
-
-  delay(1000);
   
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
   Firebase.stream("Fabians Zimmer/Testlampe/status");
@@ -56,28 +58,49 @@ void setup() {
 }
 
 int n = 0;
+bool button = true;
+int lampstat = 0;
 
 void loop() {
   if (Firebase.failed()) {
     Serial.println("streaming error");
     Serial.println(Firebase.error());
-    delay(1000);
   }
   
   if (Firebase.available()) {
      FirebaseObject event = Firebase.readEvent();
-     int status = event.getInt("data");
-     switch(status){
+     lampstat = event.getInt("data");
+     switch(lampstat){
       case 0:{
-        byte open[] = {0xA0, 0x01, 0x00, 0xA1};
-        Serial.write(open, sizeof(open));
+        digitalWrite(0,LOW);
       }
         break;
       case 1:{
-        byte close[] = {0xA0, 0x01, 0x01, 0xA2};
-        Serial.write(close, sizeof(close));
+        digitalWrite(0,HIGH);
       }
         break;
+    }
+  }
+  if(button){
+    if(digitalRead(3) == HIGH){
+      if(lampstat == 1){
+        Firebase.setFloat("Fabians Zimmer/Testlampe/status", 0);
+      }
+      else{
+        Firebase.setFloat("Fabians Zimmer/Testlampe/status", 1);
+      }
+      button = false;
+    }
+  }
+  else{
+    if(digitalRead(3) == LOW){
+      if(lampstat == 1){
+        Firebase.setFloat("Fabians Zimmer/Testlampe/status", 0);
+      }
+      else{
+        Firebase.setFloat("Fabians Zimmer/Testlampe/status", 1);
+      }
+      button = true;
     }
   }
 }
