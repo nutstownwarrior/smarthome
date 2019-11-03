@@ -31,11 +31,15 @@
 // Set these to run example.
 #define FIREBASE_HOST "smart-home-a5e0f.firebaseio.com"
 #define FIREBASE_AUTH "6bT8EWgOOjlQjmR3Y01hqsHh96juYui8BhyD2d4H"
-#define WIFI_SSID "Test"
-#define WIFI_PASSWORD "Fabian123"
+#define WIFI_SSID "Shome"
+#define WIFI_PASSWORD "ghjzv23.!?@2019"
 
+int n = 0;
+bool button = false;
+int lampstat = 0;
 
 void setup() {
+  delay(400000);
   Serial.begin(9600,SERIAL_8N1,SERIAL_TX_ONLY);
 
   pinMode(0 ,OUTPUT);
@@ -53,13 +57,9 @@ void setup() {
   Serial.println(WiFi.localIP());
   
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
-  Firebase.stream("Fabians Zimmer/Testlampe/status");
+  Firebase.stream("Fabians Zimmer/Sofalampe/status");
   delay(1000);
 }
-
-int n = 0;
-bool button = true;
-int lampstat = 0;
 
 void loop() {
   if (Firebase.failed()) {
@@ -81,26 +81,31 @@ void loop() {
         break;
     }
   }
-  if(button){
-    if(digitalRead(3) == HIGH){
-      if(lampstat == 1){
-        Firebase.setFloat("Fabians Zimmer/Testlampe/status", 0);
+  //lever();
+}
+
+
+void lever(){
+  if((digitalRead(3) == HIGH) && (!button)){
+    if(lampstat == 1){
+        digitalWrite(0,LOW);
+        Firebase.setFloat("Fabians Zimmer/Sofalampe/status", 0);
       }
       else{
-        Firebase.setFloat("Fabians Zimmer/Testlampe/status", 1);
-      }
-      button = false;
-    }
-  }
-  else{
-    if(digitalRead(3) == LOW){
-      if(lampstat == 1){
-        Firebase.setFloat("Fabians Zimmer/Testlampe/status", 0);
-      }
-      else{
-        Firebase.setFloat("Fabians Zimmer/Testlampe/status", 1);
+        digitalWrite(0,HIGH);
+        Firebase.setFloat("Fabians Zimmer/Sofalampe/status", 1);
       }
       button = true;
-    }
+  }
+  else if((digitalRead(3) == LOW) && button){
+    if(lampstat == 1){
+        digitalWrite(0,LOW);
+        Firebase.setFloat("Fabians Zimmer/Sofalampe/status", 0);
+      }
+      else{
+        digitalWrite(0,HIGH);
+        Firebase.setFloat("Fabians Zimmer/Sofalampe/status", 1);
+      }
+    button = false;
   }
 }
