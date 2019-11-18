@@ -111,7 +111,7 @@
                     </div>
                 </div>
                 <div class="mdl-cell mdl-cell--12-col">
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect" id="add">
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect" id="add" onclick="addDeviceToAction()">
                         <i class="material-icons">add</i>
                     </button>
                     <label class="mdl-label" for="add">
@@ -119,17 +119,7 @@
                     </label>
                 </div>
                 <div class="mdl-cell mdl-cell--12-col">
-                    <ul class="mdl-list">
-                        <li class="mdl-list_item">
-                            <h6 class="mdl-list__item-primary-content">
-                                Testlampe in Fabians Zimmer anschalten
-                            </h6>
-                        </li>
-                        <li class="mdl-list_item">
-                            <h6 class="mdl-list__item-primary-content">
-                                Testlampe 2 in Fabians Zimmer anschalten
-                            </h6>
-                        </li>
+                    <ul class="mdl-list" id="device_list">
                     </ul>
                 </div>
             </div>
@@ -200,8 +190,12 @@
                 document.getElementById("room_dropdown").classList.remove("is-dirty");
                 document.getElementById("device_dropdown").classList.remove("is-dirty");
                 let ul = document.getElementById("device_dropdown_ul");
+                let devicelist = document.getElementById("device_list");
                 while (ul.firstChild){
                     ul.removeChild(ul.firstChild);
+                }
+                while (devicelist.firstChild){
+                    devicelist.removeChild(devicelist.firstChild);
                 }
             });
         }());
@@ -209,7 +203,7 @@
         //toggles the webapps fullscreen mode
 
         function openFullscreen() {
-            if (window.innerHeight == screen.height) {
+            if (window.innerHeight === screen.height) {
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
                 } else if (document.mozCancelFullScreen) {
@@ -394,6 +388,31 @@
                     });
                 });
 
+        }
+
+        function addDeviceToAction(){
+            let roomfield = document.getElementById("room_input").value;
+            let devicefield = document.getElementById("device_input").value;
+            let actionfield = document.getElementById("action_input").value;
+            let devicelist = document.getElementById("device_list");
+            if((roomfield === "") || (devicefield === "") || (actionfield === "")){
+                error.innerText = "Bitte fülle alle Textfelder aus!";
+            }
+            else{
+                let li = document.createElement("li");
+                let h6 = document.createElement("h6");
+                li.classList.add("mdl-list_item");
+                h6.classList.add("mdl-list__item-primary-content");
+                if(actionfield === "An"){
+                    h6.innerText = devicefield + " in " + roomfield + " anschalten";
+                }
+                else{
+                    h6.innerText = devicefield + " in " + roomfield + " ausschalten";
+                }
+                li.appendChild(h6);
+                devicelist.appendChild(li);
+                componentHandler.upgradeDom();
+            }
         }
 
     </script>
