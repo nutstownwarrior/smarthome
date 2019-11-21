@@ -78,6 +78,12 @@
                 Hier kannst du Aktionen erstellen und zu deinem Konto hinzufügen. Wähle dazu einfach einen Raum und ein Gerät sowie was damit geschehen soll. Wiederhole dies so oft bis du deine Aktion fertig hast.
             </p>
             <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="action_name">
+                        <label class="mdl-textfield__label" for="action_name">Name</label>
+                    </div>
+                </div>
                 <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" id="room_dropdown">
                         <input type="text" value="" class="mdl-textfield__input" id="room_input" onchange="fillDevices()" readonly>
@@ -123,10 +129,10 @@
                     </ul>
                 </div>
             </div>
-            <h6 id="error"></h6>
+            <h6 id="error" style="color: red"></h6>
         </div>
         <div class="mdl-dialog__actions">
-            <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Fertig</button>
+            <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="finish_button">Fertig</button>
             <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="exit_button">Abbrechen</button>
         </div>
     </dialog>
@@ -152,6 +158,7 @@
         var dialogButton = document.getElementById("add-button");
         var deviceSelect = document.getElementById("device_dropdown");
         var uid;
+        var newaction = [];
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
@@ -171,7 +178,6 @@
 
         function logout() {
             firebase.auth().signOut().then(function() {}, function(error) {
-                console.log("error");
             });
         }
 
@@ -189,6 +195,8 @@
                 dialog.close();
                 document.getElementById("room_dropdown").classList.remove("is-dirty");
                 document.getElementById("device_dropdown").classList.remove("is-dirty");
+                document.getElementById("action_name").parentElement.classList.remove("is-dirty");
+                document.getElementById("action_name").value = "";
                 let ul = document.getElementById("device_dropdown_ul");
                 let devicelist = document.getElementById("device_list");
                 while (ul.firstChild){
@@ -196,6 +204,25 @@
                 }
                 while (devicelist.firstChild){
                     devicelist.removeChild(devicelist.firstChild);
+                }
+                newaction = [];
+            });
+            dialog.querySelector('#finish_button').addEventListener('click', function() {
+                if(addAction()){
+                    dialog.close();
+                    document.getElementById("room_dropdown").classList.remove("is-dirty");
+                    document.getElementById("device_dropdown").classList.remove("is-dirty");
+                    document.getElementById("action_name").parentElement.classList.remove("is-dirty");
+                    document.getElementById("action_name").value = "";
+                    let ul = document.getElementById("device_dropdown_ul");
+                    let devicelist = document.getElementById("device_list");
+                    while (ul.firstChild){
+                        ul.removeChild(ul.firstChild);
+                    }
+                    while (devicelist.firstChild){
+                        devicelist.removeChild(devicelist.firstChild);
+                    }
+                    newaction = [];
                 }
             });
         }());
@@ -304,13 +331,12 @@
                     snapshot.forEach(function(childSnapshot){
                         let childData = childSnapshot.val();
                         let changes = {};
-                        changes[childData.path] = parseInt(childData.status);
+                        changes[childData.path + "/status"] = parseInt(childData.status);
                         database.ref().update(changes);
                     });
                 });
             }
             else if (event.target.parentElement.classList.contains('mdl-button--icon')) {
-                console.log("blublub");
                 let device = event.target.parentElement.id;
                 database.ref("Users/" + uid + "/actions/" + device).remove();
             }
@@ -322,10 +348,10 @@
                         let changes = {};
                         switch(childData.status){
                             case 0:
-                                changes[childData.path] = 1;
+                                changes[childData.path + "/status"] = 1;
                                 break;
                             case 1:
-                                changes[childData.path] = 0;
+                                changes[childData.path + "/status"] = 0;
                                 break;
                         }
                         database.ref().update(changes);
@@ -391,12 +417,16 @@
         }
 
         function addDeviceToAction(){
+            error.innerText = "";
             let roomfield = document.getElementById("room_input").value;
             let devicefield = document.getElementById("device_input").value;
             let actionfield = document.getElementById("action_input").value;
             let devicelist = document.getElementById("device_list");
             if((roomfield === "") || (devicefield === "") || (actionfield === "")){
                 error.innerText = "Bitte fülle alle Textfelder aus!";
+            }
+            else if(newaction.some(e => e.path === roomfield + "/" + devicefield)){
+                error.innerText = "Dieses Gerät wird in deiner Aktion bereits angesteuert!";
             }
             else{
                 let li = document.createElement("li");
@@ -405,13 +435,33 @@
                 h6.classList.add("mdl-list__item-primary-content");
                 if(actionfield === "An"){
                     h6.innerText = devicefield + " in " + roomfield + " anschalten";
+                    newaction.push({"path" : roomfield + "/" + devicefield , "status" : 1});
                 }
                 else{
                     h6.innerText = devicefield + " in " + roomfield + " ausschalten";
+                    newaction.push({"path" : roomfield + "/" + devicefield , "status" : 0});
                 }
                 li.appendChild(h6);
                 devicelist.appendChild(li);
                 componentHandler.upgradeDom();
+            }
+        }
+
+        function addAction(){
+            let name = document.getElementById("action_name").value;
+            if(name === ""){
+                error.innerText = "Bitte gib einen Namen ein!";
+                return 0;
+            }
+            else if(!newaction.length){
+                error.innerText = "Du musst Geräte zu deiner Aktion hinzufügen!";
+                return 0;
+            }
+            else{
+                let data = database.ref("Users" + "/" + uid + "/actions/");
+                let changes = {[name] : newaction};
+                data.update(changes);
+                return 1;
             }
         }
 
