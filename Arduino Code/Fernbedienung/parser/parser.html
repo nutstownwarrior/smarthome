@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de">
+<input type="text" name="codes" value="" id="text">
+<button type="button" onclick="readString()">generieren</button>
+<p id="output"></p>
+</html>
+<script>
+var str;
+var arr;
+var c = 0;
+
+
+function readString() {
+  str = document.getElementById("text").value;
+  out = document.getElementById("output");
+  str = str.replace((/usec/g), "");
+  str = str.replace((/,/g), "");
+  str = str.replace((/  /g), " ");
+  arr = str.split(" ");
+  arr.pop();
+  for (let i = 0; i < arr.length; i++) {
+    if (c == 0) {
+      arr[i] = "delayMicroseconds(" + arr[i] + ");\n"
+      c = 1;
+    } else {
+      c = 0;
+      arr[i] = "pulseIR(" + arr[i] + ");\n"
+    }
+  }
+  str = arr.join("");
+  console.log(str);
+  out.innerText = str;
+}
+</script>

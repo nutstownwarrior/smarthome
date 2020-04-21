@@ -297,8 +297,8 @@
                         firebase.database().ref(data.path + "/type").once('value').then(function(device) {
                             switch (device.val()) {
                                 case "toggle":
-                                    var input = document.createElement("input");
-                                    var label = document.createElement("label");
+                                    let input = document.createElement("input");
+                                    let label = document.createElement("label");
                                     wrapperDiv.classList.add("wrapper");
                                     input.classList.add("mdl-switch__input");
                                     input.setAttribute("type", "checkbox");
@@ -314,14 +314,33 @@
                                             label.MaterialSwitch.off();
                                         }
                                     });
-                                break;
+                                    break;
                                 case "sensor":
                                     var text = document.createElement("h4");
                                     firebase.database().ref(data.path + "/value").on('value', function(status){
-                                    text.innerText = status.val() + "°C";
-                                });
-                                supTextDiv.appendChild(text);
-                                break;
+                                        text.innerText = status.val() + "°C";
+                                    });
+                                    supTextDiv.appendChild(text);
+                                    break;
+                                case "mirror":
+                                    let input1 = document.createElement("input");
+                                    let label1 = document.createElement("label");
+                                    wrapperDiv.classList.add("wrapper");
+                                    input1.classList.add("mdl-switch__input");
+                                    input1.setAttribute("type", "checkbox");
+                                    input1.setAttribute("id", data.path);
+                                    label1.classList.add("mdl-switch", "mdl-js-switch", "mdl-js-ripple-effect");
+                                    label1.appendChild(input1);
+                                    wrapperDiv.appendChild(label1);
+                                    supTextDiv.appendChild(wrapperDiv);
+                                    firebase.database().ref(data.path + "/status").on('value', function(status) {
+                                        if (status.val() == 1) {
+                                            label1.MaterialSwitch.on();
+                                        } else if (status.val() == 0) {
+                                            label1.MaterialSwitch.off();
+                                        }
+                                    });
+                                    break;
                             }
                             div.appendChild(supTextDiv);
                             componentHandler.upgradeDom();
@@ -362,7 +381,7 @@
             }
         }
 
-        //detects which button inside the grid pressed and executes the according function
+        //detects which button inside the grid is pressed and executes the according function
 
         document.querySelector('#grid').addEventListener('click', function(event) {
             var changes = {};
