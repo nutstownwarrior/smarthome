@@ -329,7 +329,12 @@
                                     let textFieldInput = document.createElement("input");
                                     let textFieldLabel = document.createElement("label");
                                     let confirmButton = document.createElement("button");
+                                    let gridDiv = document.createElement("div");
+                                    let textGridDiv = document.createElement("div");
+                                    let buttonGridDiv = document.createElement("div");
                                     wrapperDiv.classList.add("wrapper");
+                                    //construct grid
+                                    gridDiv.classList.add("mdl-grid");
                                     //construct switch in Card
                                     input1.classList.add("mdl-switch__input");
                                     input1.setAttribute("type", "checkbox");
@@ -346,15 +351,19 @@
                                     textFieldLabel.innerText = "Video-URL";
                                     textFieldDiv.appendChild(textFieldInput);
                                     textFieldDiv.appendChild(textFieldLabel);
+                                    textGridDiv.classList.add("mdl-cell", "mdl-cell--12-col");
+                                    textGridDiv.appendChild(textFieldDiv);
                                     //construct confirm button
                                     confirmButton.classList.add("mdl-button", "mdl-js-button", "mdl-button--raised", "mdl-js-ripple-effect", "mdl-button--colored");
                                     confirmButton.setAttribute("id", data.path + "/video_url");
                                     confirmButton.innerText = "Abspielen";
+                                    buttonGridDiv.classList.add("mdl-cell", "mdl-cell--12-col");
+                                    buttonGridDiv.appendChild(confirmButton);
                                     //append components to wrapper
                                     wrapperDiv.appendChild(label1);
                                     supTextDiv.appendChild(wrapperDiv);
-                                    supTextDiv.appendChild(textFieldDiv);
-                                    supTextDiv.appendChild(confirmButton);
+                                    supTextDiv.appendChild(textGridDiv);
+                                    supTextDiv.appendChild(buttonGridDiv);
                                     firebase.database().ref(data.path + "/status").on('value', function(status) {
                                         if (status.val() == 1) {
                                             label1.MaterialSwitch.on();
