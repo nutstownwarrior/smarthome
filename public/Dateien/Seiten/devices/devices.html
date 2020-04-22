@@ -325,14 +325,36 @@
                                 case "mirror":
                                     let input1 = document.createElement("input");
                                     let label1 = document.createElement("label");
+                                    let textFieldDiv = document.createElement("div");
+                                    let textFieldInput = document.createElement("input");
+                                    let textFieldLabel = document.createElement("label");
+                                    let confirmButton = document.createElement("button");
                                     wrapperDiv.classList.add("wrapper");
+                                    //construct switch in Card
                                     input1.classList.add("mdl-switch__input");
                                     input1.setAttribute("type", "checkbox");
                                     input1.setAttribute("id", data.path);
                                     label1.classList.add("mdl-switch", "mdl-js-switch", "mdl-js-ripple-effect");
                                     label1.appendChild(input1);
+                                    //construct Textfield in Card
+                                    textFieldDiv.classList.add("mdl-textfield", "mdl-js-textfield", "mdl-textfield--floating-label");
+                                    textFieldInput.classList.add("mdl-textfield__input");
+                                    textFieldInput.setAttribute("type", "text");
+                                    textFieldInput.setAttribute("id", data.path + "/textfield");
+                                    textFieldLabel.classList.add("mdl-textfield__label");
+                                    textFieldLabel.setAttribute("for","linkTextfield");
+                                    textFieldLabel.innerText = "Video-URL";
+                                    textFieldDiv.appendChild(textFieldInput);
+                                    textFieldDiv.appendChild(textFieldLabel);
+                                    //construct confirm button
+                                    confirmButton.classList.add("mdl-button", "mdl-js-button", "mdl-button--raised", "mdl-js-ripple-effect", "mdl-button--colored");
+                                    confirmButton.setAttribute("id", data.path + "/video_url");
+                                    confirmButton.innerText = "Abspielen";
+                                    //append components to wrapper
                                     wrapperDiv.appendChild(label1);
                                     supTextDiv.appendChild(wrapperDiv);
+                                    supTextDiv.appendChild(textFieldDiv);
+                                    supTextDiv.appendChild(confirmButton);
                                     firebase.database().ref(data.path + "/status").on('value', function(status) {
                                         if (status.val() == 1) {
                                             label1.MaterialSwitch.on();
@@ -394,9 +416,19 @@
                     }
                     firebase.database().ref().update(changes);
                 });
-            } else if (event.target.parentElement.classList.contains('mdl-button--icon')) {
+            }
+            else if (event.target.parentElement.classList.contains('mdl-button--icon')) {
                 var device = event.target.parentElement.id.replace("/", "");
                 database.ref("/Users/" + firebase.auth().currentUser.uid + "/devices/" + device.replace("1", "") + "/").remove();
+            }
+            else if (event.target.parentElement.classList.contains('mdl-button')){
+                let changes = {};
+                let buttonId = event.target.parentElement.id;
+                let path = buttonId.replace("/video_url", "");
+                let textField = document.getElementById(path + "/textfield");
+                let textFieldContent = textField.value;
+                changes[path + "/video_url"] = textFieldContent;
+                firebase.database().ref().update(changes);
             }
         });
 
