@@ -8,8 +8,8 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266Ping.h>
 
-#define FIREBASE_HOST "smart-home-a5e0f.firebaseio.com"
-#define FIREBASE_AUTH "6bT8EWgOOjlQjmR3Y01hqsHh96juYui8BhyD2d4H"
+#define FIREBASE_HOST ""
+#define FIREBASE_AUTH ""
 #define WIFI_SSID ""
 #define WIFI_PASSWORD ""
 
